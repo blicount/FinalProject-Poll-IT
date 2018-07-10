@@ -1,0 +1,6 @@
+#api_divs{
+    display: flex;
+    width: 500px;
+    justify-content: space-around;
+    height: 500px;
+}

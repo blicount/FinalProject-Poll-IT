@@ -1,0 +1,32 @@
+{
+  "id": 1,
+  "name": "some catagory name",
+  "image": "some url image",
+  "catagory": "bar",
+  "nav": [
+    "nav1",
+    "nav2",
+    "nav3",
+    "nav4"
+  ],
+  "places": [
+    {
+      "id": 1,
+      "name": "place name_1",
+      "image": "some url image",
+      "stars": 201
+    },
+    {
+      "id": 2,
+      "name": "place name_2",
+      "image": "some url image",
+      "stars": 201
+    },
+    {
+      "id": 3,
+      "name": "place name_3",
+      "image": "some url image",
+      "stars": 201
+    }
+  ]
+}

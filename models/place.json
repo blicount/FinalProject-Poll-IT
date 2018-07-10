@@ -1,0 +1,25 @@
+{  
+    "places": [
+    {
+      "id": 1,
+      "name": "river",
+      "image": "some url image",
+      "stars": 111,
+      "Catagory": "restaurant"
+    },
+    {
+      "id": 2,
+      "name": "met ball",
+      "image": "some url image",
+      "stars": 21,
+      "Catagory": "restaurant"
+    },
+    {
+      "id": 3,
+      "name": "japanika",
+      "image": "some url image",
+      "stars": 301,
+      "catagory": "restaurant"
+    }
+  ]
+}

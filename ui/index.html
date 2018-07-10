@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" type="text/css" href="includes/css/myStyle.css">
+        <link rel="icon" href="../../favicon.ico">
+        <title> Poll-IT API</title>
+        <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/">
+        
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+        </script>
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    </head>
+
+    <body>
+
+        <div class="container">
+            <div class="header clearfix">
+                <nav>
+                    <ul class="nav nav-pills float-right">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Contact</a>
+                        </li>
+                    </ul>
+                </nav>
+                <h3 class="text-muted"> Poll-IT API</h3>
+            </div>
+
+            <div class="jumbotron">
+                <h1 class="display-3"> Poll-IT service - Cancellations</h1>
+                <p class="lead">This site explain about the Poll-IT service cancellation api 
+                </p>
+                <!--<a class="btn btn-lg btn-success" href="#" role="button">Sign up today</a>-->
+            </div>
+
+            <div id="api_divs">
+                <div class="col-lg-66">
+                    <h4>Get all Catagories</h4>
+                    <p>
+                        HTTP verb : GET <br>
+                        Parametes - non <br>
+                        <a href="//localhost:3000/catagories" target="iframe_a">Get all Catagories - localhost</a><br>
+                        <a href="https://poll-it-api.herokuapp.com/catagories" target="iframe_a">Get All Catagories - heroku</a><br><br>
+                        <iframe class="myframe" name="iframe_a"></iframe><br><br>
+                        <img src="public/catagories.png">
+                    </p>
+                </div>
+                <div class="col-lg-66">
+                    <h4>Get Catagory</h4>
+                    <p>
+                        HTTP verb : GET <br>
+                        Parametes - non <br>
+                        <a href="//localhost:3000/catagory/restaurant" target="iframe_b">Get Catagory Places - localhost</a><br>
+                        <a href="https://poll-it-api.herokuapp.com/catagory/restaurant" target="iframe_a">Get Catagory Properties - heroku</a><br>
+                        <br><iframe class="myframe" name="iframe_b"></iframe><br><br>
+                        <img src="public/selected_catagory.png">
+                    </p>
+                </div>
+                <div class="col-lg-66">
+                    <h4>Get all Groups</h4>
+                    <p>
+                        HTTP verb : GET <br>
+                        Parametes - non <br>
+                        <a href="//localhost:3000/groups" target="iframe_c">Get Groups - localhost</a><br>
+                        <a href="https://poll-it-api.herokuapp.com/groups" target="iframe_c">Get Groups - heroku</a><br>
+                         <br><iframe class="myframe" name="iframe_c"></iframe><br><br>
+                        <img src="public/groups.png">
+                    </p>
+                </div>
+            </div>
+
+            <footer class="footer">
+                <p>&copy; auther: yarin hala 2018</p>
+            </footer>
+
+        </div> <!-- /container -->
+
+        <!-- Bootstrap core JavaScript
+================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+        <script>
+            $(document).ready(function(){
+                $("button").click(function(){
+                    $.post("//localhost:3000/getNewsByID",
+                           {
+                        _newsID: "123809",
+                    },
+                           function(data,status){
+                        $('#post_json').append(JSON.stringify(data));
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>
