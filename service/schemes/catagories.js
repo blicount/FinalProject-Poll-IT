@@ -18,3 +18,4 @@ catagories = new mongoose.Schema({
 /*export scema*/
 var Catagories = mongoose.model('Catagories' , catagories);
 module.exports = Catagories;
+

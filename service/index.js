@@ -16,6 +16,25 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('/assets', express.static(`${__dirname}/public`));
 
+app.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
+    next();
+});
+
 /****************************************************************/
 app.get('/', (req, res) => {
     res.sendFile(`${__dirname}/ui/index.html`);
@@ -115,7 +134,7 @@ app.get('/groups',(req,res) =>{
 
 
 app.post('/createGroup', (req, res) => {
-  pollItService.createGroup(req.body.id, req.body.name, req.body.manger)
+  pollItService.createGroup(req.body.name, req.body.manger)
       .then(
             (result, error) => {
                 if(result == "invalid input")
@@ -135,6 +154,27 @@ app.post('/deleteGroup', (req, res) => {
       res.status(200).json({"message": "Group deleted"});
   });
 });
+
+/*get all options for a group*/
+
+app.get('/getOptionsByGroup/:group', (req, res) => {
+  pollItService.getOptionsByGroup(req.params.group)
+      .then(
+            (data) => {
+                if (!data.length) {
+                    console.log('no data return');
+                    res.status(404).json('no db is abvileble');
+
+                } else {
+                    res.set('Content-Type', 'application/json');
+                    res.set('header-One' , 'createCatagory');
+                    res.status(200).json(data);
+                }
+            }, (error) => {
+                console.log(error);
+            });
+});
+
 
 /*delete Member Groups*/
 
@@ -157,8 +197,16 @@ app.post('/updateGroup', (req, res) => {
   });
 });
 
+/*add uder to Group*/
 
-
+app.post('/addUser', (req, res) => {
+console.log(`${req.body._email}`);
+console.log(`${req.body._groupid}`);
+  pollItService.addUser(req.body._email,req.body._groupid).then((result, error) => {
+    if(result)
+      res.status(200).json({"message": "user added"});
+  });
+});
 
 /**************************event******************************/
 
@@ -188,6 +236,39 @@ app.post('/getEvent',(req,res) =>{
 });
 
 
+
+/*************************vote******************************/
+
+app.get('/options',(req,res) =>{
+    console.log('GET - /options');
+
+    pollItService.getAllOptions()
+        .then(
+            (data) => {
+                if (!data.length) {
+                    console.log('no data return');
+                    res.status(404).json('no db is abvileble');
+
+                } else {
+                    res.set('Content-Type', 'application/json');
+                    res.set('header-One' , 'getAllCatagories');
+                    res.status(200).json(data);
+                }
+            }, (error) => {
+                console.log(error);
+            });
+});
+
+app.post('/addVote', (req, res) => {
+  pollItService.addVote(req.body.GroupID,req.body.VoteID)
+      .then(
+            (result, error) => {
+                if(result == "invalid input")
+                    res.status(200).json({"error" :"invalid input"});
+                else
+                    res.status(200).json({"message" : result});
+                });
+});
 
 /*************************end******************************/
 //app.all('*', (req, res, next) => {

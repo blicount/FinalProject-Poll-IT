@@ -2,7 +2,9 @@ var _catagories = require('../schemes/catagories'),
     _place = require('../schemes/place'),
     _groups = require('../schemes/groups'),
     _users = require('../schemes/user'),
+    _options = require('../schemes/options'),
     consts   = require('../consts'),
+    Promise = require('promise'),
     mongoose = require('mongoose'), //Import the mongoose module
     mongoDB = consts.MLAB_KEY;//Set up default mongoose connection
 
@@ -16,6 +18,7 @@ var db = mongoose.connection;
 
 /*Bind connection with error event*/
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
 
 
 
@@ -86,6 +89,8 @@ module.exports = class catagories{
 
     }
 
+    
+    
 
     createGroup(_name, _manger){
         return new Promise((resolve, reject) => {
@@ -98,11 +103,11 @@ module.exports = class catagories{
           }
           else if(data == null){
             var newgroup = new _groups ({
-                  Id: 4,
-                  Name: _name,
+                  name: _name,
                   creation_date: new Date(),
                   manger: _manger,
                   winner: null, 
+                  location : null,
             });
             newgroup.save(
               (err) =>
@@ -110,7 +115,7 @@ module.exports = class catagories{
                 if(err)
                 console.log(`err: ${err}`);
                 else{
-                  resolve(`group ${_groups.name} created`);
+                  resolve(`group ${newgroup.name} created`);
                 }
               });
             }
@@ -119,6 +124,19 @@ module.exports = class catagories{
             }
           });
         });
+    }
+    
+    
+    getOptionsByGroup(Groupid){
+    _groups.findOne({ "_id": Groupid }, (err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).send({ "Message": "Owner ID was not found in the system" });
+    }
+    console.log(docs);
+    res.status(200).json(docs);
+  })
+        
     }
       
 
@@ -142,9 +160,6 @@ module.exports = class catagories{
       return new Promise((resolve, reject) => {
              console.log(`${_id}`);  
                         console.log(`${_email}`);
-                    
-            
-
             _groups.find({"Id": _id},
                     (err,data) =>{
                         if(err){
@@ -182,8 +197,37 @@ module.exports = class catagories{
               
 
         }
+    
+    addUser(_email,_groupid){
+        console.log("got here");
+         return new Promise((resolve, reject) => {
+             console.log("got here 2");
+              console.log(`${_email}`);
+              console.log(`${_groupid}`);
+             _users.findOne({'email': _email}, (err, rec) => { 
+            console.log("got here 3");
+              if(err){
+                    reject(err);
+              }
+              else{
+                  console.log("got here 4");
+                _groups.update({'_id': _groupid}, {$push: {'users': rec._id}},
+                    (err) => {
+                        if(err)
+                            reject(`err:${err}`);
+                        else{
+                            resolve(true);
+                        }
+                    }
+                );
+            }   
+                 
+                 
+             }); 
+        });
+    }
 
-/*************************Event function****************************/
+/*************************Event function**********************/
 
     getEvent(_email,_gropId){
         return new Promise((resolve , reject)=>{
@@ -209,6 +253,21 @@ module.exports = class catagories{
         });
     }
 
+/*************************** Votes ************************/
+    
+     getAllOptions(){
+        return new Promise((resolve , reject)=>{
+            _options.find({} , (err , data)=>{
+                if(err){
+                    reject(`error : ${err}`);
+                }else{
+                    console.log('getAllOptions:\n' + data); 
+                    resolve(data);
+                }
+            });
+        });
+
+    }   
 
 
 

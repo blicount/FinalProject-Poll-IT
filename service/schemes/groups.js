@@ -1,18 +1,13 @@
 var mongoose    = require('mongoose'),
-    _place      = require('./place'),
     _massage    = require('./massage'),
-    _user    = require('./user');
+    _user    = require('./user'),
+    _opsions = require('./options');
 
 
 
 group = new mongoose.Schema({
 
-    Id:{
-        type:Number,
-        index:1,
-        required:true
-    },
-    Name:{
+    name:{
         type:String,
         required:true
     },
@@ -27,10 +22,21 @@ group = new mongoose.Schema({
     winner:{
         type:String
     },
-    _place: mongoose.Schema.ObjectId,
-    _user:[_user],
-    _massage: [mongoose.Schema.ObjectId]
-
+    location:{
+        type:String
+    },
+    options: [
+        {type: mongoose.Schema.Types.ObjectId, ref: "options"}
+    ],
+    users:[
+        {type: mongoose.Schema.Types.ObjectId, ref: "users"}
+    ],
+    massages: [
+        {type: mongoose.Schema.Types.ObjectId, ref: "massage"}
+         ],
+    pic:{
+        type:String
+    }
     },{collection : 'groups'})
 
 
