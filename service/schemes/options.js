@@ -2,12 +2,11 @@ var mongoose    = require('mongoose');
 
 option = new mongoose.Schema({
 
-    name:{
+    description:{
         type:String,
-        index:1,
         required:true
     },
-    owner:{
+    email:{
         type:String,
         required:true
     },
@@ -23,3 +22,6 @@ option = new mongoose.Schema({
 /*export scema*/
 var Option = mongoose.model('Option' , option);
 module.exports = Option;
+
+ 
+    

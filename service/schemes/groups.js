@@ -1,8 +1,5 @@
 var mongoose    = require('mongoose'),
     _massage    = require('./massage'),
-    _user    = require('./user'),
-    _opsions = require('./options');
-
 
 
 group = new mongoose.Schema({
@@ -25,14 +22,13 @@ group = new mongoose.Schema({
     location:{
         type:String
     },
-    options: [
-        {type: mongoose.Schema.Types.ObjectId, ref: "options"}
-    ],
-    users:[
-        {type: mongoose.Schema.Types.ObjectId, ref: "users"}
-    ],
+    description:{
+        type:String
+    },
+    options: [String],
+    usersEmail:[String],
     massages: [
-        {type: mongoose.Schema.Types.ObjectId, ref: "massage"}
+        {type:String}
          ],
     pic:{
         type:String

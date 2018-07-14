@@ -134,7 +134,7 @@ app.get('/groups',(req,res) =>{
 
 
 app.post('/createGroup', (req, res) => {
-  pollItService.createGroup(req.body.name, req.body.manger)
+  pollItService.createGroup(req.body.email, req.body.groupname,req.body.catagory, req.body.discription,req.body.user)
       .then(
             (result, error) => {
                 if(result == "invalid input")
@@ -157,8 +157,8 @@ app.post('/deleteGroup', (req, res) => {
 
 /*get all options for a group*/
 
-app.get('/getOptionsByGroup/:group', (req, res) => {
-  pollItService.getOptionsByGroup(req.params.group)
+app.get('/getOptionsByGroup/:groupid', (req, res) => {
+  pollItService.getOptionsByGroup(req.params.groupid)
       .then(
             (data) => {
                 if (!data.length) {
@@ -176,19 +176,14 @@ app.get('/getOptionsByGroup/:group', (req, res) => {
 });
 
 
-/*delete Member Groups*/
-
-app.post('/deleteMember', (req, res) => {
-
-  pollItService.deleteMember(req.body.id,req.body.email).then((result, error) => {
-    if(result)
-      res.status(200).json({"message": "member deleted"});
-  });
-});
-
 /*update  Groups*/
 
-
+app.post('/createOption', (req, res) => {
+  pollItService.createOption(req.body.email,req.body.description,req.body.groupname).then((result, error) => {
+    if(result)
+      res.status(200).json({"message": "option created"});
+  });
+});
 
 app.post('/updateGroup', (req, res) => {
   pollItService.updateGroup(req.body.email,req.body.name).then((result, error) => {
@@ -200,15 +195,63 @@ app.post('/updateGroup', (req, res) => {
 /*add uder to Group*/
 
 app.post('/addUser', (req, res) => {
-console.log(`${req.body._email}`);
-console.log(`${req.body._groupid}`);
-  pollItService.addUser(req.body._email,req.body._groupid).then((result, error) => {
+  pollItService.addUser(req.body._email,req.body._groupid)
+    .then(
+            (result, error) => {
+                if(result == "invalid input")
+                    res.status(200).json({"error" :"invalid input"});
+                else
+                    res.status(200).json({"message" : result});
+                });
+});
+/*delete user Groups*/
+
+app.put('/deleteUser', (req, res) => {
+
+  pollItService.deleteUser(req.body._email,req.body._groupid).then((result, error) => {
     if(result)
-      res.status(200).json({"message": "user added"});
+      res.status(200).json({"message": "user deleted member "});
   });
 });
 
-/**************************event******************************/
+/************************* users *****************************/
+
+
+app.post('/createUser', (req, res) => {
+  pollItService.createUser(req.body._email, req.body._name)
+      .then(
+            (result, error) => {
+                if(result == "invalid input")
+                    res.status(200).json({"error" :"invalid input"});
+                else
+                    res.status(200).json({"message" : result});
+                });
+});
+
+/*get all users*/
+
+app.get('/getAllUsers',(req,res) =>{
+    console.log('GET - /get AllUsers');
+
+    pollItService.getAllUsers()
+        .then(
+            (data) => {
+                if (!data.length) {
+                    console.log('no data return');
+                    res.status(404).json('no db is abvileble');
+
+                } else {
+                    res.set('Content-Type', 'application/json');
+                    res.set('header-One' , 'getAllGroups');
+                    res.status(200).json(data);
+                }
+            }, (error) => {
+                console.log(error);
+            });
+});
+
+
+/************************** event ******************************/
 
 app.post('/getEvent',(req,res) =>{
     console.log('post - /getEvent');
@@ -243,6 +286,26 @@ app.get('/options',(req,res) =>{
     console.log('GET - /options');
 
     pollItService.getAllOptions()
+        .then(
+            (data) => {
+                if (!data.length) {
+                    console.log('no data return');
+                    res.status(404).json('no db is abvileble');
+
+                } else {
+                    res.set('Content-Type', 'application/json');
+                    res.set('header-One' , 'getAllCatagories');
+                    res.status(200).json(data);
+                }
+            }, (error) => {
+                console.log(error);
+            });
+});
+
+app.get('/options/',(req,res) =>{
+    console.log('GET - /options');
+
+    pollItService.getAllOptionsForGroup(_groupid)
         .then(
             (data) => {
                 if (!data.length) {

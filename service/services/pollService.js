@@ -92,22 +92,29 @@ module.exports = class catagories{
     
     
 
-    createGroup(_name, _manger){
+    createGroup(_email, _groupname,_category,_discription,_usersArr){
+        console.log(`${_email}`);
+        console.log(`${_groupname}`);
+        console.log(`${_category}`);
+        console.log(`${_discription}`);
+        console.log(`${_usersArr}`);
         return new Promise((resolve, reject) => {
-        if(_name == "" ||  _manger == "")
+        if(_groupname == "" ||  _email == "")
             resolve("invalid input");
 
-        _groups.findOne({'name': _name},(err,data)=>{
+        _groups.findOne({'name': _groupname},(err,data)=>{
           if(err){
             console.log(`error:${err}`);
           }
           else if(data == null){
             var newgroup = new _groups ({
-                  name: _name,
+                  name: _groupname,
                   creation_date: new Date(),
-                  manger: _manger,
+                  manger: _email,
                   winner: null, 
-                  location : null,
+                  location : _category,
+                  descreption : _discription,
+                  usersEmail:_usersArr,
             });
             newgroup.save(
               (err) =>
@@ -126,23 +133,12 @@ module.exports = class catagories{
         });
     }
     
-    
-    getOptionsByGroup(Groupid){
-    _groups.findOne({ "_id": Groupid }, (err, docs) => {
-    if (err) {
-      console.log(err);
-      return res.status(400).send({ "Message": "Owner ID was not found in the system" });
-    }
-    console.log(docs);
-    res.status(200).json(docs);
-  })
-        
-    }
+
       
 
     deleteGroup(id){
       return new Promise((resolve, reject) => {
-          _groups.remove({"Id": id}, (err) => {
+          _groups.remove({'_id': id}, (err) => {
               if(err){
                 console.log(`err: ${err}`);
                 resolve(false);
@@ -156,33 +152,26 @@ module.exports = class catagories{
     }
 
 
-    deleteMember(_id,_email){
-      return new Promise((resolve, reject) => {
-             console.log(`${_id}`);  
-                        console.log(`${_email}`);
-            _groups.find({"Id": _id},
-                    (err,data) =>{
-                        if(err){
-                        console.log(`her errror2`);  
-                        console.log(`err: ${err}`);
-                        //_user:{$in:_userEmail:`${_email}`
-                    }
-                    else{ 
-                        console.log('deleteMember:\n' + data);   
-                        _groups.remove({_userEmail:`${_email}`},
-                            (err) =>{
-                                if(err){
-                              console.log(`err: ${err}`);
-                             }
-                          });
-                    }
-
-                    });
-                   resolve(true);
-                  
-                });
-              }
-
+    deleteUser(_email,_groupid){
+      return new Promise((resolve, reject) => {  
+            _users.findOne({'email': _email},(err,rec) =>{
+                if(err){
+                    reject(err);
+                }
+                else{
+                    _groups.update({'_id': _groupid}, {$pull: {'users': rec._id}},
+                    (err) => {
+                        if(err)
+                            reject(`err:${err}`);
+                        else{
+                            resolve(true);
+                            }
+                        }
+                    );
+                }   
+            }); 
+        });
+    }
 
         updateGroup(id,name, manger){
           return new Promise((resolve, reject) =>{
@@ -199,34 +188,92 @@ module.exports = class catagories{
         }
     
     addUser(_email,_groupid){
-        console.log("got here");
          return new Promise((resolve, reject) => {
-             console.log("got here 2");
-              console.log(`${_email}`);
-              console.log(`${_groupid}`);
              _users.findOne({'email': _email}, (err, rec) => { 
-            console.log("got here 3");
               if(err){
                     reject(err);
               }
-              else{
-                  console.log("got here 4");
-                _groups.update({'_id': _groupid}, {$push: {'users': rec._id}},
+              else if(rec == null) {
+                  resolve("email not exists");
+              }
+                    else{
+                    _groups.update({'_id': _groupid}, {$push: {'usersEmail': rec.email}},
                     (err) => {
                         if(err)
                             reject(`err:${err}`);
                         else{
-                            resolve(true);
+                            resolve("user add to group");
                         }
-                    }
-                );
-            }   
-                 
-                 
+                    });
+                }       
              }); 
         });
     }
 
+    getOptionsByGroup(_groupid){
+        return new Promise((resolve , reject)=>{
+            _groups.find({'id':_groupid} , (err , rec)=>{
+                if(err){
+                    reject(`error : ${err}`);
+                }else{
+             for(let i in rec.options)
+                _options.find({},(err,data) =>{
+                    if(err){
+                        reject(`error : ${err}`);
+                    }else{
+                        resolve(data);
+                        }
+                    }); 
+                }
+            });
+        });
+    }
+
+
+/************************* users *****************************/
+    
+    createUser(_email, _name){
+        return new Promise((resolve, reject) => {
+        if(_name == "" ||  _email == "")
+            resolve("invalid input");
+        _users.findOne({'email': _email},(err,data)=>{
+          if(err){
+            console.log(`error:${err}`);
+          }
+          else if(data == null){
+            var newuser = new _users ({
+                  name: _name,
+                  email: _email,
+            });
+            newuser.save(
+              (err) =>{
+                if(err)
+                console.log(`err: ${err}`);
+                else{
+                  resolve(`user ${newuser.name} created`);
+                }
+              });
+            }
+            else {
+              resolve("user exists");
+            }
+          });
+        });
+    }
+    
+    getAllUsers(){
+        return new Promise((resolve , reject)=>{
+            _users.find({} , (err , data)=>{
+                if(err){
+                    reject(`error : ${err}`);
+                }else{
+                    console.log('getAllUsers:\n' + data);
+                    resolve(data);
+                }
+            });
+        });
+
+    }
 /*************************Event function**********************/
 
     getEvent(_email,_gropId){
@@ -255,7 +302,47 @@ module.exports = class catagories{
 
 /*************************** Votes ************************/
     
-     getAllOptions(){
+    createOption(_email,_description,_groupname){
+        var id;
+        return new Promise((resolve, reject) => {
+            if(_description == "" ||  _email == "")
+                resolve("invalid input");
+                var newoption = new _options ({
+                email: _email,
+                description: _description,    
+                votes_number: 0,   
+                });
+                newoption.save(
+                    (err) =>{
+                        if(err)
+                            console.log(`err: ${err}`);
+                        else{
+                            _groups.findOne({'name': _groupname},(err,data)=>{
+                            _options.findOne({'description': _description,'email': _email,},(err,data2)=>{
+                            id = data2._id;
+                            console.log(`iiiiiiddddddddd: ${id}`);
+                            });
+                                if(err){
+                                    reject(err);
+                                    }
+                                else{
+                                    console.log(`${id}`)
+                                    _groups.update({'name': _groupname}, {$push: {'options': id}},
+                                        (err) => {
+                                            if(err)
+                                                reject(`err:${err}`);
+                                            else{
+                                                resolve(true);
+                                            }
+                                        });
+                                    }    
+                                });
+                            }
+                        });
+                });
+            } 
+    
+    getAllOptions(){
         return new Promise((resolve , reject)=>{
             _options.find({} , (err , data)=>{
                 if(err){
@@ -269,10 +356,5 @@ module.exports = class catagories{
 
     }   
 
-
-
-
-
 }
-
 
