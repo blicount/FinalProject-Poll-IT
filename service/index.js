@@ -2,14 +2,12 @@ var express         = require('express'),
     events          = require('events'),
     url             = require('url'),
     bodyParser      = require('body-parser'),
-    POLLIT          = require('./services/pollService'),
+    categories = require('./controllers/categories.ctl'),
+    group = require('./controllers/group.ctl'),
+    options = require('./controllers/options.ctl'), 
+    users = require('./controllers/users.ctl'),   
     app             = express(),
     port            = process.env.PORT || 3000;
-
-/*TWS = Twitter Web Service*/
-pollItService = new POLLIT();
-
-//app.set('ManageNewsInTwitter');
 
 /* bodyParser for json encode*/
 app.use(bodyParser.json());
@@ -43,7 +41,7 @@ app.get('/', (req, res) => {
 app.get('/catagories',(req,res) =>{
     console.log('GET - /catagories');
 
-    pollItService.getAllCatagories()
+    categories.getAllCatagories()
         .then(
             (data) => {
                 if (!data.length) {
@@ -66,7 +64,7 @@ app.get('/catagory/:name',(req,res) =>{
     var _catagoryName = req.params.name;
     console.log(_catagoryName);
 
-    pollItService.getAllCatagoryPlaces(_catagoryName)
+    categories.getAllCatagoryPlaces(_catagoryName)
         .then(
             (data) => {
                 if (!data.length) {
@@ -90,7 +88,7 @@ app.post('/createCatagory',(req,res) =>{
 
     console.log(_catagoryName);
 
-    pollItService.createCatagory(_catagoryId,_catagoryName)
+    categories.createCatagory(_catagoryId,_catagoryName)
         .then(
             (data) => {
                 if (!data.length) {
@@ -113,7 +111,7 @@ app.post('/createCatagory',(req,res) =>{
 app.get('/groups',(req,res) =>{
     console.log('GET - /groups');
 
-    pollItService.getAllGroups()
+    group.getAllGroups()
         .then(
             (data) => {
                 if (!data.length) {
@@ -134,7 +132,7 @@ app.get('/groups',(req,res) =>{
 
 
 app.post('/createGroup', (req, res) => {
-  pollItService.createGroup(req.body.email, req.body.groupname,req.body.catagory, req.body.discription,req.body.user)
+  group.createGroup(req.body.email, req.body.groupname,req.body.catagory, req.body.discription,req.body.user)
       .then(
             (result, error) => {
                 if(result == "invalid input")
@@ -149,7 +147,7 @@ app.post('/createGroup', (req, res) => {
 /*delete Groups*/
 
 app.post('/deleteGroup', (req, res) => {
-  pollItService.deleteGroup(req.body.id).then((result, error) => {
+  group.deleteGroup(req.body.id).then((result, error) => {
     if(result)
       res.status(200).json({"message": "Group deleted"});
   });
@@ -158,7 +156,7 @@ app.post('/deleteGroup', (req, res) => {
 /*get all options for a group*/
 
 app.get('/getOptionsByGroup/:groupid', (req, res) => {
-  pollItService.getOptionsByGroup(req.params.groupid)
+  group.getOptionsByGroup(req.params.groupid)
       .then(
             (data) => {
                 if (!data.length) {
@@ -179,23 +177,38 @@ app.get('/getOptionsByGroup/:groupid', (req, res) => {
 /*update  Groups*/
 
 app.post('/createOption', (req, res) => {
-  pollItService.createOption(req.body.email,req.body.description,req.body.groupname).then((result, error) => {
-    if(result)
-      res.status(200).json({"message": "option created"});
-  });
+  options.createOption(req.body.email,req.body.description,req.body.groupname).then(
+            (result, error) => {
+                if(result == "invalid input")
+                    res.status(200).json({"error" :"invalid input"});
+                else
+                    res.status(200).json({"message" : result});
+                });
 });
 
 app.post('/updateGroup', (req, res) => {
-  pollItService.updateGroup(req.body.email,req.body.name).then((result, error) => {
+  group.updateGroup(req.body.email,req.body.name).then((result, error) => {
     if(result)
       res.status(200).json({"message": "Group updated"});
   });
 });
 
+app.post('/checkUserInGroup', (req, res) => {
+  options.checkUserInGroup(req.body.email,req.body.groupname).then(
+            (result, error) => {
+                if(result == "invalid input")
+                    res.status(200).json({"error" :"invalid input"});
+                else
+                    res.status(200).json({"message" : result});
+                });
+});
+
+
+
 /*add uder to Group*/
 
 app.post('/addUser', (req, res) => {
-  pollItService.addUser(req.body._email,req.body._groupid)
+  group.addUser(req.body._email,req.body._groupid)
     .then(
             (result, error) => {
                 if(result == "invalid input")
@@ -208,7 +221,7 @@ app.post('/addUser', (req, res) => {
 
 app.put('/deleteUser', (req, res) => {
 
-  pollItService.deleteUser(req.body._email,req.body._groupid).then((result, error) => {
+  group.deleteUser(req.body._email,req.body._groupid).then((result, error) => {
     if(result)
       res.status(200).json({"message": "user deleted member "});
   });
@@ -218,7 +231,7 @@ app.put('/deleteUser', (req, res) => {
 
 
 app.post('/createUser', (req, res) => {
-  pollItService.createUser(req.body._email, req.body._name)
+  users.createUser(req.body._email, req.body._name)
       .then(
             (result, error) => {
                 if(result == "invalid input")
@@ -233,7 +246,7 @@ app.post('/createUser', (req, res) => {
 app.get('/getAllUsers',(req,res) =>{
     console.log('GET - /get AllUsers');
 
-    pollItService.getAllUsers()
+    users.getAllUsers()
         .then(
             (data) => {
                 if (!data.length) {
@@ -261,7 +274,7 @@ app.post('/getEvent',(req,res) =>{
     console.log(_email);
     console.log(_gropId);
 
-    pollItService.getEvent(_email,_gropId)
+    users.getEvent(_email,_gropId)
         .then(
             (data) => {
                 if (!data.length) {
@@ -282,10 +295,10 @@ app.post('/getEvent',(req,res) =>{
 
 /*************************vote******************************/
 
-app.get('/options',(req,res) =>{
+app.get('/getAllOptions',(req,res) =>{
     console.log('GET - /options');
 
-    pollItService.getAllOptions()
+    options.getAllOptions()
         .then(
             (data) => {
                 if (!data.length) {
@@ -302,10 +315,10 @@ app.get('/options',(req,res) =>{
             });
 });
 
-app.get('/options/',(req,res) =>{
+app.get('/getAllOptionsByGroup/',(req,res) =>{
     console.log('GET - /options');
 
-    pollItService.getAllOptionsForGroup(_groupid)
+    group.getAllOptionsByGroup(_groupid)
         .then(
             (data) => {
                 if (!data.length) {
@@ -323,7 +336,7 @@ app.get('/options/',(req,res) =>{
 });
 
 app.post('/addVote', (req, res) => {
-  pollItService.addVote(req.body.GroupID,req.body.VoteID)
+  group.addVote(req.body.GroupID,req.body.VoteID)
       .then(
             (result, error) => {
                 if(result == "invalid input")
