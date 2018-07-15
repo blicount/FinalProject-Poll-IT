@@ -27,8 +27,7 @@ module.exports = {
     deleteUser,
     updateGroup,
     addUser,
-    getOptionsByGroup,
-    addVote
+    getOptionsByGroup
     
 }
 
@@ -179,6 +178,4 @@ function deleteUser(_email,_groupid){
         });
     }
 
-   function addVote(){
-        
-    }
+

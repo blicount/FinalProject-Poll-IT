@@ -23,7 +23,8 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 module.exports = {
     createOption,
     getAllOptions,
-    checkUserInGroup
+    checkUserInGroup,
+    addVote
 
 }
 function checkUserInGroup(_email,_groupname){
@@ -53,8 +54,8 @@ function createOption(_email,_description,_groupname){
             console.log(`${_description}`);
             if(_description == null ||  _email == null)
                 resolve("invalid input");
-           if(!checkUserInGroup(_email,_groupname))
-                resolve("user not member of the group");
+           /*if(!checkUserInGroup(_email,_groupname))
+                resolve("user not member of the group");*/
                 var newoption = new _options ({
                 email: _email,
                 description: _description,    
@@ -101,4 +102,28 @@ function createOption(_email,_description,_groupname){
         });
 
     }  
+
+   function addVote(_email,_description,_groupname){
+       return new Promise((resolve , reject)=>{
+            _options.findOne({'description': _description,'email': _email,}, 
+                (err , data)=>{
+                    if(err){
+                        reject(`error : ${err}`);
+                    }else{
+                        /*if(!checkUserInGroup(_email,_groupname))
+                            resolve("user not member of the group");*/
+                        if(data==null)
+                            resolve('option not found');
+                        _options.update({'description': _description,'email': _email},{$inc: {'votes_number': 1 }},
+                        (err) => {
+                            if(err)
+                                reject(`err:${err}`);
+                            else{
+                                resolve('the number of vote incremented');
+                            }
+                        });
+                    }
+                });
+            }); 
+        }
     

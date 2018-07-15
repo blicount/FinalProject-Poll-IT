@@ -336,7 +336,9 @@ app.get('/getAllOptionsByGroup/',(req,res) =>{
 });
 
 app.post('/addVote', (req, res) => {
-  group.addVote(req.body.GroupID,req.body.VoteID)
+    console.log(`${req.body.email}`);
+    console.log(`${req.body.description}`);
+  options.addVote(req.body.email,req.body.description)
       .then(
             (result, error) => {
                 if(result == "invalid input")
