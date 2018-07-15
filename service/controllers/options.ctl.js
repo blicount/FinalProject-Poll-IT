@@ -24,7 +24,8 @@ module.exports = {
     createOption,
     getAllOptions,
     checkUserInGroup,
-    addVote
+    addVote,
+    optionById
 
 }
 function checkUserInGroup(_email,_groupname){
@@ -102,6 +103,20 @@ function createOption(_email,_description,_groupname){
         });
 
     }  
+
+ function optionById(id){
+        return new Promise((resolve , reject)=>{
+            _options.find({'_id':id} , (err , data)=>{
+                if(err){
+                    reject(`error : ${err}`);
+                }else{
+                    console.log('optionById:\n' + data); 
+                    resolve(data);
+                }
+            });
+        });
+
+    }
 
    function addVote(_email,_description,_groupname){
        return new Promise((resolve , reject)=>{

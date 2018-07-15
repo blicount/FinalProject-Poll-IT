@@ -142,6 +142,18 @@ app.post('/createGroup', (req, res) => {
                 });
 });
 
+app.get('/groupById/:id', (req, res) => {
+  group.groupById(req.params.id)
+      .then(
+            (result, error) => {
+                if(result == "invalid input")
+                    res.status(200).json({"error" :"invalid input"});
+                else
+                res.status(200).json(result);
+
+                });
+});
+
 
 
 /*delete Groups*/
@@ -155,13 +167,13 @@ app.post('/deleteGroup', (req, res) => {
 
 /*get all options for a group*/
 
-app.get('/getOptionsByGroup/:groupid', (req, res) => {
-  group.getOptionsByGroup(req.params.groupid)
+app.get('/getOptionsByGroupId/:groupid', (req, res) => {
+  group.getOptionsByGroupId(req.params.groupid)
       .then(
             (data) => {
                 if (!data.length) {
                     console.log('no data return');
-                    res.status(404).json('no db is abvileble');
+                    res.status(404).json('no data returnd');
 
                 } else {
                     res.set('Content-Type', 'application/json');
@@ -315,6 +327,18 @@ app.get('/getAllOptions',(req,res) =>{
             });
 });
 
+
+app.get('/optionById/:id', (req, res) => {
+  options.optionById(req.params.id)
+      .then(
+            (result, error) => {
+                if(result == "invalid input")
+                    res.status(200).json({"error" :"invalid input"});
+                else
+                    res.status(200).json({"message" : result});
+                });
+});
+
 app.get('/getAllOptionsByGroup/',(req,res) =>{
     console.log('GET - /options');
 
@@ -336,9 +360,7 @@ app.get('/getAllOptionsByGroup/',(req,res) =>{
 });
 
 app.post('/addVote', (req, res) => {
-    console.log(`${req.body.email}`);
-    console.log(`${req.body.description}`);
-  options.addVote(req.body.email,req.body.description)
+  options.addVote(req.body.email,req.body.description,req.body.groupname)
       .then(
             (result, error) => {
                 if(result == "invalid input")

@@ -3,6 +3,7 @@ var _catagories = require('../models/catagories'),
     _options = require('../models/options'),
     _place = require('../models/place'),
     _users = require('../models/users'),
+    options = require('./options.ctl'),
     Promise = require('promise'),
      consts   = require('../consts'),
     Promise = require('promise'),
@@ -27,7 +28,9 @@ module.exports = {
     deleteUser,
     updateGroup,
     addUser,
-    getOptionsByGroup
+    getOptionsByGroupId,
+    finishGroup,
+    groupById
     
 }
 
@@ -45,12 +48,41 @@ module.exports = {
 
     }
 
+ function groupById(id){
+        return new Promise((resolve , reject)=>{
+            _groups.find({'_id':id} , (err , data)=>{
+                if(err){
+                    reject(`error : ${err}`);
+                }else{
+                    console.log('groupById:\n' + data); 
+                    resolve(data);
+                }
+            });
+        });
+
+    }
+
+    function getOptionsByGroupId(groupid){
+        var array;
+        return new Promise((resolve , reject)=>{
+            _groups.findOne({'_id':groupid}, (err , rec)=>{
+                console.log(rec.options);
+                
+              /*rec.options.forEach(value,key) =>{
+                    array.push(options.optionById(value));
+                    if(err){
+                    reject(`error : ${err}`);
+                    }else{
+                   resolve(array);
+                    }
+                }*/
+            });
+        });
+    }
+/*rec.options.forEach(value,key) =>{
+array.push(options.optionById(value)); }*/
+
  function createGroup(_email, _groupname,_category,_discription,_usersArr){
-        console.log(`${_email}`);
-        console.log(`${_groupname}`);
-        console.log(`${_category}`);
-        console.log(`${_discription}`);
-        console.log(`${_usersArr}`);
         return new Promise((resolve, reject) => {
         if(_groupname == "" ||  _email == "")
             resolve("invalid input");
@@ -103,7 +135,7 @@ module.exports = {
     }
 
 
-function deleteUser(_email,_groupid){
+    function deleteUser(_email,_groupid){
       return new Promise((resolve, reject) => {  
             _users.findOne({'usersEmail': _email},(err,rec) =>{
                 if(err){
@@ -136,7 +168,7 @@ function deleteUser(_email,_groupid){
 
         }
 
- function addUser(_email,_groupid){
+    function addUser(_email,_groupid){
          return new Promise((resolve, reject) => {
              _users.findOne({'email': _email}, (err, rec) => { 
               if(err){
@@ -159,23 +191,7 @@ function deleteUser(_email,_groupid){
         });
     }
 
- function getOptionsByGroup(_groupname){
-        return new Promise((resolve , reject)=>{
-            _groups.find({'name':_groupname} , (err , rec)=>{
-                if(err){
-                    reject(`error : ${err}`);
-                }else{
-                    for(let i in rec.options)
-                        _options.find({'_id': rec.options[i]},(err,data) =>{
-                    if(err){
-                        reject(`error : ${err}`);
-                    }else{
-                        resolve(data);
-                        }
-                    }); 
-                }
-            });
-        });
-    }
 
-
+    function finishGroup(_groupname){
+    
+}
