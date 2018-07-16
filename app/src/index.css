@@ -1,0 +1,288 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Arial;
+}
+a {
+    text-decoration: none;
+}
+
+header,footer,main,nav,section,main,article {
+    display: block;
+}
+
+#wrapper {
+    width: 360px;
+    height: 100%;
+    margin: 0px auto;
+    display: block;
+    margin-top: 20px;
+}
+
+#logo{
+    width: 201px;
+    height: 147px;
+    position: relative;
+    top: 25%;
+    left: 20%;
+
+}
+
+h3{
+    color: #000000;
+    font-family: "Arial";
+    font-size: 19px;
+    font-style: normal;
+    font-stretch: normal;
+    font-weight: 900;
+    text-align: center;
+}
+
+.search{
+    position: relative;
+    top: 50px;
+    left: 5%;
+    width: 320px;
+    height: 20px;
+    border-radius: 5px;
+
+}
+
+.catagoriesList{
+    width: 90%;
+    height: 300px;
+    position: relative;
+    top: 5%;
+    left: 20%;
+    display: block;
+}
+
+.catagory{
+    position: relative;
+    left: -13%;
+    width: 25%;
+    height: 35px;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom:20px;
+    text-align: center;
+    border-radius: 35px;
+    border:2px solid;
+    padding-top: 10px;
+    padding-right:5px;
+    padding-left:5px;
+    border-color:  #aaaaaa;
+}
+
+
+
+.btn_suprise{
+    position: relative;
+    left: 25%;
+    top:10%;
+    text-align: center;
+    width: 190px;
+    height: 35px;
+    background-color: yellow;
+    display: block;
+}
+
+.groupForm{
+    position: relative;
+    left: 25%;
+    top:10%;
+}
+
+.groupForm label{
+    display: block;
+    margin-bottom: 20px;
+}
+
+.groupForm input{
+    display: block;
+    margin-top: 10px;
+    border-radius: 5px;
+    width: 200px;
+    height: 30px;
+}
+
+
+
+#checkboxes input{
+    display: inline;
+    margin-top: 0px;
+    margin-left:  3px;
+    border-radius: 5px;
+    width: 15px;
+    height: 15px;
+}
+
+
+.multiselect {
+  width: 200px;
+}
+
+.selectBox {
+  position: relative;
+}
+
+.selectBox select {
+  width: 100%;
+  font-weight: bold;
+}
+
+.selectBox select{
+    height: 40px;
+    border-radius: 2px;
+}
+
+.overSelect {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+#checkboxes {
+  display: none;
+  height: 120px;
+  border: 1px #dadada solid;
+}
+
+#checkboxes label {
+  display: block;
+  margin-bottom: 2px;
+
+}
+
+#checkboxes label:hover {
+  background-color: #1e90ff;
+}
+
+#groupSubmit{
+    position: absolute !important;
+    display: block;
+    top:450px;
+
+}
+
+
+.groups{
+
+}
+
+.groups h2{
+    position: relative;
+    left:35%;
+    top:10px;
+}
+
+
+.group_box{
+    margin-top: 30px;
+    position: relative;
+    left: 5%;
+    width: 90%;
+    height: 80px;
+    display: flex;
+    border-radius: 10px;
+    border-color:#AAAAAA;
+    border-style:solid;
+}
+
+.group_box span{
+    position: absolute;
+    left: 75%;
+    margin-top: 10px;
+    font-size: 12px;
+    color: black;
+}
+
+
+.group_box h3{
+    margin-top: 5px; 
+    margin-left: 10px;
+    width: 200px;
+    height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 15px;
+    white-space: nowrap;
+    text-align: left;
+
+
+}
+
+
+
+.group_box p{
+    position: absolute;
+    top:50px;
+    margin-left:10px; 
+    max-width: 80%;
+    height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #aaaaaa;
+}
+
+.group_subject{
+    width: 300px;
+    position: relative;
+    left: 8%;
+    margin-top: 20px;
+    padding-bottom: 10px;
+    border-color:black;
+    border-style: solid;
+    display: block;
+    border-radius: 20px;
+    border-color: #cccccc; 
+}
+
+.group_subject h3{
+    margin-top: 10px;
+}
+
+.group_subject h4,h5{
+    margin-top: 10px;
+    margin-left:5px; ; 
+}
+
+.group_options{
+
+}
+
+.group_options h3{
+    margin-top: 10px;
+}
+
+
+
+
+.add_option_form{
+    position: absolute;;
+   
+}
+
+
+.hidden{
+    position: absolute;;
+    display: none;
+}
+
+.option_box{
+
+}
+
+
+.add_option_btn{
+    position: relative;
+    top: 250px;
+    left: 70px;
+    width: 220px;
+    height: 30px;
+    font-size: 15px;
+
+}
