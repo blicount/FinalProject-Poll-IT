@@ -165,6 +165,13 @@ app.post('/deleteGroup', (req, res) => {
   });
 });
 
+app.post('/closeGroup', (req, res) => {
+  group.closeGroup(req.body.id).then((result, error) => {
+    if(result)
+      res.status(200).json(result);
+  });
+});
+
 /*get all options for a group*/
 
 app.get('/getOptionsByGroupId/:groupid', (req, res) => {

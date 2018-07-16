@@ -29,7 +29,7 @@ module.exports = {
     updateGroup,
     addUser,
     getOptionsByGroupId,
-    finishGroup,
+    closeGroup,
     groupById
     
 }
@@ -62,23 +62,31 @@ module.exports = {
 
     }
 
-    function getOptionsByGroupId(groupid){
+function getOptionsByGroupId(groupid){
         var array;
         return new Promise((resolve , reject)=>{
             _groups.findOne({'_id':groupid}, (err , rec)=>{
-                console.log(rec.options);
-                
-              /*rec.options.forEach(value,key) =>{
-                    array.push(options.optionById(value));
-                    if(err){
+                if(err){
                     reject(`error : ${err}`);
-                    }else{
-                   resolve(array);
-                    }
-                }*/
+                }else{
+                   for(let i in rec.options){
+                        _options.findOne({'_id':rec.options[i]} , (err , data)=>{
+                            if(err){
+                                reject(`error : ${err}`);
+                            }else{
+                               console.log(rec.options[i]);
+                                console.log(data);
+                                array.push(data);
+                                }  
+                            }); 
+                        }
+                    resolve(array);
+ 
+                }
             });
         });
     }
+
 /*rec.options.forEach(value,key) =>{
 array.push(options.optionById(value)); }*/
 
@@ -192,6 +200,30 @@ array.push(options.optionById(value)); }*/
     }
 
 
-    function finishGroup(_groupname){
-    
-}
+    function closeGroup(groupid){
+        var array;
+        var winner;
+        var winner_votes;
+        return new Promise((resolve , reject)=>{
+            _groups.findOne({'_id':groupid}, (err , rec)=>{
+                if(err){
+                    reject(`error : ${err}`);
+                }else{
+                   for(let i in rec.options){
+                        _options.findOne({'_id':rec.options[i]} , (err , data)=>{
+                            if(err){
+                                reject(`error : ${err}`);
+                            }else if(data.votes_number > winner_votes){
+                                winner = data._id;
+                                winner_votes = data.votes_number;    
+                                }  
+                            }); 
+                        }
+                    deleteGroup(groupid);
+                    array.push(winner);
+                    array.push(winner_votes);
+                    resolve(array);
+                }
+            });
+        });
+    }
